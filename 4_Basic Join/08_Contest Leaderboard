@@ -1,1 +1,26 @@
+SOLUTION 1)
 
+SELECT T1.hacker_id, T1.name, SUM(T1.Asli_Wala) AS SUM_TOTAL from
+     
+(SELECT H1.hacker_id, H1.name, S1.challenge_id, MAX(S1.score) AS Asli_Wala 
+FROM Hackers H1 
+JOIN Submissions S1
+ON H1.hacker_id=S1.hacker_id
+GROUP BY S1.challenge_id, H1.hacker_id, H1.name) T1
+GROUP BY T1.hacker_id, T1.name
+HAVING SUM(T1.Asli_Wala) <> 0
+ORDER BY SUM_TOTAL DESC, T1.hacker_id;
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+SOLUTION 2)
+
+SELECT X.hacker_id, 
+(SELECT H.NAME FROM HACKERS H
+                      WHERE H.HACKER_ID = X.HACKER_ID) NAME, 
+SUM(X.SCORE) TOTAL_SCORE FROM 
+  (SELECT HACKER_ID, MAX(SCORE) SCORE FROM SUBMISSIONS S
+   GROUP BY 1, S.CHALLENGE_ID) X 
+GROUP BY 1
+HAVING TOTAL_SCORE > 0
+ORDER BY TOTAL_SCORE DESC, HACKER_ID;

@@ -11,11 +11,10 @@ JOIN Difficulty D
 ON C.difficulty_level=D.difficulty_level
 JOIN Hackers H
 ON H.hacker_id=S.hacker_id
-WHERE S.score = D.score AND C.difficulty_level=D.difficulty_level) TQ
+WHERE S.score = D.score) TQ
 GROUP BY TQ.name, TQ.hacker_id)T1
 WHERE GINTI>1
 ORDER BY GINTI DESC, T1.hacker_id;
-
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 

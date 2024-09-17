@@ -1,1 +1,92 @@
+SOLUTION 1) {My solution}
+
+SELECT H.hacker_id, H.name, COUNT(C.challenge_id) as challenge_count
+from Hackers H JOIN Challenges C
+ON H.hacker_id=C.hacker_id
+GROUP BY H.hacker_id, H.name
+HAVING 
+COUNT(C.challenge_id) =
+(SELECT COUNT(C2.challenge_id) AS MAX_COUNT FROM Challenges C2
+GROUP BY C2.hacker_id
+ORDER BY MAX_COUNT DESC limit 1)
+OR 
+COUNT(C.challenge_id) IN 
+(Select * from
+(SELECT COUNT(C3.challenge_id) AS Unique_count FROM Challenges C3
+GROUP BY C3.hacker_id) a 
+ GROUP BY Unique_count
+ having count(Unique_count)=1)
+order by COUNT(C.challenge_id) desc, H.hacker_id;
+    
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+SOLUTION 2)
+
+SELECT H.HACKER_ID, 
+       H.NAME, 
+       COUNT(C.CHALLENGE_ID) AS C_COUNT
+FROM HACKERS H
+JOIN CHALLENGES C ON C.HACKER_ID = H.HACKER_ID
+GROUP BY H.HACKER_ID, H.NAME
+HAVING C_COUNT = 
+    (SELECT COUNT(C2.CHALLENGE_ID) AS C_MAX
+     FROM CHALLENGES AS C2
+     GROUP BY C2.HACKER_ID 
+     ORDER BY C_MAX DESC LIMIT 1)
+OR C_COUNT IN 
+    (SELECT DISTINCT C_COMPARE AS C_UNIQUE
+     FROM (SELECT H2.HACKER_ID, 
+                  H2.NAME, 
+                  COUNT(CHALLENGE_ID) AS C_COMPARE
+           FROM HACKERS H2
+           JOIN CHALLENGES C ON C.HACKER_ID = H2.HACKER_ID
+           GROUP BY H2.HACKER_ID, H2.NAME) COUNTS
+     GROUP BY C_COMPARE
+     HAVING COUNT(C_COMPARE) = 1)
+ORDER BY C_COUNT DESC, H.HACKER_ID;
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+SOLUTION 3)  USING CTE (WINDOW FUNCTION)
+
+WITH ChallengeCounts AS (
+    SELECT 
+        H.hacker_id,
+        H.name,
+        COUNT(C.challenge_id) AS num_challenges
+    FROM 
+        Hackers H
+    JOIN 
+        Challenges C ON H.hacker_id = C.hacker_id
+    GROUP BY 
+        H.hacker_id, H.name
+),
+MaxChallenge AS (
+    SELECT 
+        MAX(num_challenges) AS max_challenges
+    FROM 
+        ChallengeCounts
+),
+NonUniqueCounts AS (
+    SELECT 
+        num_challenges
+    FROM 
+        ChallengeCounts
+    GROUP BY 
+        num_challenges
+    HAVING 
+        COUNT(*) > 1 AND num_challenges < (SELECT max_challenges FROM MaxChallenge)
+)
+SELECT 
+    cc.hacker_id,
+    cc.name,
+    cc.num_challenges
+FROM 
+    ChallengeCounts cc
+WHERE 
+    cc.num_challenges NOT IN (SELECT num_challenges FROM NonUniqueCounts)
+ORDER BY 
+    cc.num_challenges DESC, cc.hacker_id;
 

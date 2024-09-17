@@ -1,1 +1,35 @@
+SOLUTION 1)
 
+
+SELECT T1.hacker_id, T1.name
+FROM
+(SELECT TQ.name, TQ.hacker_id, COUNT(full_score) AS GINTI FROM
+(SELECT H.name, H.hacker_id, S.score as full_score from
+Submissions S JOIN Challenges C 
+ON S.challenge_id=C.challenge_id
+JOIN Difficulty D
+ON C.difficulty_level=D.difficulty_level
+JOIN Hackers H
+ON H.hacker_id=S.hacker_id
+WHERE S.score = D.score AND C.difficulty_level=D.difficulty_level) TQ
+GROUP BY TQ.name, TQ.hacker_id)T1
+WHERE GINTI>1
+ORDER BY GINTI DESC, T1.hacker_id;
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+SOLUTION 3)
+
+SELECT H.HACKER_ID, H.NAME
+FROM HACKERS H
+JOIN SUBMISSIONS S
+ON H.HACKER_ID = S.HACKER_ID
+JOIN CHALLENGES C
+ON S.CHALLENGE_ID = C.CHALLENGE_ID
+JOIN DIFFICULTY D
+ON C.DIFFICULTY_LEVEL = D.DIFFICULTY_LEVEL
+WHERE S.SCORE = D.SCORE AND C.DIFFICULTY_LEVEL = D.DIFFICULTY_LEVEL
+GROUP BY H.HACKER_ID, H.NAME
+HAVING COUNT(S.HACKER_ID) > 1
+ORDER BY COUNT(S.HACKER_ID) DESC, S.HACKER_ID ASC;

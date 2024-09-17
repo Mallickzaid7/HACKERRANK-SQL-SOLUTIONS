@@ -1,4 +1,18 @@
+SOLUTION 1)
+
 SELECT CONCAT(Name,"(", Substring(Occupation,1,1),")") from OCCUPATIONS
+ORDER BY Name;
+Select Concat("There are a total of ", count(Occupation), " ",Lower(Occupation), "s.") from OCCUPATIONS
+group BY Occupation
+order by Count(Occupation), Occupation;
+
+
+SOLUTION 2)
+
+SELECT CASE WHEN Occupation = "Doctor" Then CONCAT(Name,'(D)')
+WHEN Occupation = "Actor" Then CONCAT(Name,"(A)")
+WHEN Occupation = "Singer" Then CONCAT(Name,"(S)")
+ELSE CONCAT(Name,"(P)") END from OCCUPATIONS
 ORDER BY Name;
 Select Concat("There are a total of ", count(Occupation), " ",Lower(Occupation), "s.") from OCCUPATIONS
 group BY Occupation

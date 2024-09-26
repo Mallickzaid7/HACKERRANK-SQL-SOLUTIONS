@@ -1,4 +1,4 @@
-SOLUTION 1) {My solution}
+SOLUTION 1) 
 
 SELECT H.hacker_id, H.name, COUNT(C.challenge_id) as challenge_count
 from Hackers H JOIN Challenges C

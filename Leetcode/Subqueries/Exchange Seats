@@ -1,0 +1,7 @@
+SELECT (CASE WHEN
+S.id%2<>0 and S.id<>(select count(*) from Seat) then S.id+1 
+when S.id%2=0 and S.id<>(select count(*) from Seat) then S.id-1
+WHEN S.id%2=0 and S.id=(select count(*) from Seat) then S.id-1
+else S.id end) as id, 
+S.student from Seat S 
+order by id;

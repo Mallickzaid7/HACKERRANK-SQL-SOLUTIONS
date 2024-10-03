@@ -1,0 +1,20 @@
+SELECT Q1.query_name as query_name, ROUND(AVG(Q1.rating/Q1.position),2) AS quality,
+CASE WHEN A1.rating_below_3 IS NULL THEN 0 ELSE
+ROUND((A1.rating_below_3/COUNT(*))*100,2) END as poor_query_percentage
+ FROM QUERIES Q1 LEFT JOIN 
+ (SELECT query_name, COUNT(*) as rating_below_3 FROM queries WHERE rating < 3 GROUP BY query_name) A1 
+ ON Q1.query_name=A1.query_name
+ WHERE Q1.query_name is not null
+GROUP BY Q1.query_name;
+
+
+select
+query_name,
+round(avg(cast(rating as decimal) / position), 2) as quality,
+round(sum(case when rating < 3 then 1 else 0 end) * 100 / count(*), 2) as poor_query_percentage
+from
+queries
+group by
+query_name;
+
+ 

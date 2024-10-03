@@ -1,0 +1,10 @@
+Select pid AS product_id, 
+case when total_units is null then 0
+else ROUND(total_price/total_units, 2) end as average_price 
+from
+(Select P.product_id as pid,U.units as unt, price,sum(units) as total_units, sum(price*units) as total_price
+FROM Prices P LEFT JOIN UnitsSold U 
+ON P.product_id=U.product_id
+AND U.purchase_date between P.start_date and P.end_date
+group by P.product_id) A ;
+

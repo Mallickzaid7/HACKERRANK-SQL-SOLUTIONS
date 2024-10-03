@@ -1,0 +1,5 @@
+SELECT person_name from 
+(SELECT *, SUM(weight) over(order by turn ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) RUN_SUM FROM Queue) ABC
+where RUN_SUM <= 1000
+order by turn desc
+limit 1;

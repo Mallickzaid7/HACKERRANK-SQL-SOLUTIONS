@@ -1,0 +1,10 @@
+SELECT
+    CASE 
+        WHEN COUNT(*) = 0 THEN NULL
+        ELSE salary 
+    END AS SecondHighestSalary
+FROM (
+    SELECT salary, DENSE_RANK() OVER (ORDER BY salary DESC) AS dense_rnk
+    FROM Employee
+) AS ranked_salaries
+WHERE dense_rnk = 2;

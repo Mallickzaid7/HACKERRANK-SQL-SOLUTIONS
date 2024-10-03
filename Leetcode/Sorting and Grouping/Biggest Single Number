@@ -1,0 +1,2 @@
+SELECT MAX(num) as num from 
+(Select num from MyNumbers GROUP BY num having count(num)=1) abc;

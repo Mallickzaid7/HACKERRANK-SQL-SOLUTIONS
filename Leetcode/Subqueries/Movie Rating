@@ -1,0 +1,13 @@
+Select name as results from 
+(Select U.name, MR.user_id,  count(MR.user_id) as CNT from MovieRating MR JOIN
+Users U ON U.user_id=MR.user_id
+Group by U.name
+order by CNT DESC, U.name
+LIMIT 1) B
+UNION ALL
+Select title as results from 
+(Select MR.movie_id, M.title, avg(MR.rating) as average from MovieRating MR 
+JOIN Movies M ON MR.movie_id=M.movie_id
+ where month(created_at) = "02" and year(created_at)="2020" group by M.title
+ order by average desc, M.title
+LIMIT 1) A;

@@ -1,0 +1,4 @@
+SELECT DISTINCT num as ConsecutiveNums  from
+(Select *, Lead(c1) over(order by id) c2 from 
+(SELECT *, Lead(num) over(order by id) c1 from Logs) lag1) lag2
+where num = c1 and c1 = c2;

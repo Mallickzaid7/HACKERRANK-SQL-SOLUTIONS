@@ -1,0 +1,6 @@
+Select Department, Employee, salary
+from
+(Select Department.name as Department, Employee.name as Employee, Employee.salary, dense_rank() 
+over(partition by Department.name order by Employee.salary desc) dense_rnk from
+Employee JOIN Department ON Employee.departmentId=Department.id) a
+where dense_rnk<4;

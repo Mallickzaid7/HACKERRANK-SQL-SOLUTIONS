@@ -1,0 +1,10 @@
+Select B.customer_id, sum(CNT) as count_no_trans
+FROM
+(Select A.customer_id,
+case when A.transaction_id is NULL THEN 1 ELSE 0 END AS CNT FROM 
+(SELECT V.customer_id, V.visit_id, T.transaction_id from Visits V 
+LEFT JOIN Transactions T 
+ON V.visit_id=T.visit_id) A) B
+GROUP BY B.customer_id 
+HAVING count_no_trans>0
+;

@@ -1,0 +1,20 @@
+# Write your MySQL query statement below
+Select A.product_name, sum(B.unit) as unit from
+(select product_id, product_name from Products) A
+JOIN
+(select * from orders where month(order_date)=2 and year(order_date)=2020) B
+ON A.product_id=B.product_id
+Group by A.product_id
+having unit>=100;
+
+
+With cte as (
+    Select A.product_name, sum(B.unit) as unit from 
+(select product_id, product_name from Products) A
+JOIN
+(select * from orders where month(order_date)=2 and year(order_date)=2020) B
+ON A.product_id=B.product_id
+Group by A.product_id
+having unit>=100
+)
+Select product_name, unit from cte;

@@ -1,0 +1,8 @@
+SELECT S.user_id,
+ CASE WHEN S.user_id NOT IN (SELECT user_id from Confirmations) then 0 
+ ELSE ROUND(SUM(A.CNT)/COUNT(CNT),2) END AS confirmation_rate FROM 
+ Signups S LEFT JOIN  
+(SELECT *,
+ CASE WHEN action="confirmed" then 1 else 0 end as CNT from Confirmations) A
+ON S.user_id=A.user_id
+ GROUP BY S.user_id;

@@ -1,0 +1,7 @@
+Select activity_date as day, count(user_id) active_users  from 
+(Select distinct *, case when activity_type IS NULL then 0 else 1 end as status from activity 
+WHERE activity_date BETWEEN '2019-06-28' AND '2019-07-27'
+group by user_id, activity_date) A 
+where status =1
+group by activity_date
+;
